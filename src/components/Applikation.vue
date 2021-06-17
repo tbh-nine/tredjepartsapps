@@ -14,14 +14,16 @@
     <hr>
     <a href="http://www.google.com" target="_blank">Link til Google</a>
     <hr>
+    Datepicker
+    <div class="date-picker mb-305" :data-default-date="date">
+      <input class="form-input" :value="date" required type="text" />
+    </div>
+    <hr>
     <div>Response fra axios</div>
     <div class="spinner" v-if="loadingResponse" aria-label="Henter indhold" />
     {{response}}
     <hr>
     <button class="button button-primary">Jeg er en knap</button>
-    <hr>
-    <div>Datovælger</div>
-    <div id="datepicker"><input ref="input" /></div>
     <hr>
     <div class="row">
       <div class="col-md-6 col-xs-12">
@@ -57,7 +59,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import { DateTime } from 'luxon';
-import Pikaday from 'pikaday';
+import * as DKFDS from "dkfds";
 
 var dynamicComponent = {
   template: '<div>{{text}}</div>',
@@ -75,29 +77,15 @@ export default class Applikation extends Vue {
   private response = {};
   private error = {};
   private loadingResponse = false;
-  private datePicker!: Pikaday;
+  private date = '';
 
   mounted() {
     this.currentTime = DateTime.local().toISO();
     this.loadingResponse = true;
     this.callExternalApi();
 
-    this.datePicker = new Pikaday({
-      field: this.$refs.input as HTMLElement,
-      format: 'DD/MM/YYYY',
-      firstDay: 1, // mandag
-      minDate: new Date(),
-      container: document.getElementById('datepicker'),
-      i18n: {
-        previousMonth: 'Forrige måned',
-        nextMonth: 'Næste måned',
-        months: ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'July', 'August', 'September', 'Oktober', 'November', 'December'],
-        weekdays: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
-        weekdaysShort: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør']
-      },
-      onSelect: (date: Date) => this.$emit('select', date)
-    });
-    this.datePicker.setDate(new Date(), true);
+    DKFDS.datePicker.on(document.body);
+    this.date = DateTime.local().toFormat('yyyy-MM-dd');
   }
 
   private async callExternalApi() {
@@ -111,9 +99,4 @@ export default class Applikation extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-  @import '../../node_modules/dkfds-plugins/dist/css/dkfds-pikaday-theme.standalone.min.css';
-
-  #datepicker {
-    max-width: 400px;
-  }
 </style>
