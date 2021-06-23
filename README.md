@@ -23,4 +23,4 @@ npm run lint
 npm run prettierfix
 ```
 
-When development is finished, upload Applikation.vue to Git repository and send it to review
+When development is finished, upload Applikation.vue to Git repository and send it to review.
