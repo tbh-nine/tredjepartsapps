@@ -2,7 +2,7 @@ const path = require('path');
 
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
-module.exports = {
+const options = {
   css: {
     extract: { ignoreOrder: true },
     loaderOptions: {
@@ -49,3 +49,10 @@ module.exports = {
   },
   runtimeCompiler: true
 };
+
+if (process.env.VG_VUE_TRANSPILE === 'true') {
+  console.log('⚙️ Transpiling Vue applikation ...');
+  options.css.extract = false;
+}
+
+module.exports = options;
