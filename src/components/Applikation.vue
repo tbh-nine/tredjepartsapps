@@ -6,47 +6,42 @@
     <h3>Jeg er en h3</h3>
     <h4>Jeg er en h4</h4>
     <h5>Jeg er en h5</h5>
-    <hr>
-    Tid lige nu: {{currentTime}}
-    <hr>
+    <hr />
+    Tid lige nu: {{ currentTime }}
+    <hr />
     Dynamisk komponent:
     <dynamic-component text="Jeg er en dynamisk komponent"></dynamic-component>
-    <hr>
+    <hr />
     <a href="http://www.google.com" target="_blank">Link til Google</a>
-    <hr>
+    <hr />
     Datepicker
     <div class="date-picker mb-305" :data-default-date="date">
       <input class="form-input" :value="date" required type="text" />
     </div>
-    <hr>
+    <hr />
     <div>Response fra axios</div>
-    <div class="spinner" v-if="loadingResponse" aria-label="Henter indhold" />
-    {{response}}
-    <hr>
+    <div v-if="loadingResponse" class="spinner" aria-label="Henter indhold" />
+    {{ response }}
+    <hr />
     <button class="button button-primary">Jeg er en knap</button>
-    <hr>
+    <hr />
     <div class="row">
-      <div class="col-md-6 col-xs-12">
-        Eksempel på grid: Venstre kolonne
-      </div>
-      <div class="col-md-6 col-xs-12">
-        Eksempel på grid: Højre kolonne
-      </div>
+      <div class="col-md-6 col-xs-12">Eksempel på grid: Venstre kolonne</div>
+      <div class="col-md-6 col-xs-12">Eksempel på grid: Højre kolonne</div>
     </div>
-    <hr>
+    <hr />
     <div class="card">
       <div class="card-header">
         <h3 class="header-title">Eksempel på card-komponenten</h3>
       </div>
       <div class="card-text">
-        <p>Du kan bruge cards til at gruppere funktionalitet, der adskiller
-          sig fra sidens øvrige indhold. Cards kan placeres i et <a
-            href="#">grid</a>, således at de står side om
-          side.</p>
+        <p>
+          Du kan bruge cards til at gruppere funktionalitet, der adskiller sig fra sidens øvrige indhold. Cards kan placeres i et
+          <a href="#">grid</a>, således at de står side om side.
+        </p>
       </div>
 
       <div class="card-footer card-action">
-
         <div class="action-links">
           <a href="#">Gå til komponent</a>
         </div>
@@ -59,11 +54,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import { DateTime } from 'luxon';
-import * as DKFDS from "dkfds";
+import * as DKFDS from 'dkfds';
 
-var dynamicComponent = {
+const dynamicComponent = {
   template: '<div>{{text}}</div>',
-  props: ['text'],
+  props: ['text']
 };
 
 @Component({
@@ -89,14 +84,16 @@ export default class Applikation extends Vue {
   }
 
   private async callExternalApi() {
-    axios.get('https://httpbin.org/get').then((rsp: any) => {
-      this.response = rsp;
-      this.loadingResponse = false;
-    }).catch((error: any) => {
-      this.error = error;
-    });
+    axios
+      .get('https://httpbin.org/get')
+      .then((rsp: any) => {
+        this.response = rsp;
+        this.loadingResponse = false;
+      })
+      .catch((error: any) => {
+        this.error = error;
+      });
   }
 }
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
