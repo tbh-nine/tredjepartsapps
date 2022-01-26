@@ -114,6 +114,35 @@
         står side om side.
       </div>
     </div>
+
+    <h3>Data opsamling</h3>
+    Virksomhedsguiden opsamler data vedr. brugerens adfærd. Det er leverandørens ansvar at der også opsamles relevant data i leverandør applikationen.
+    Følgende er en liste af events, som leverandør applikationen skal kalde i forskellige scenarier.
+
+    <h4>PageView</h4>
+    <div class="my-5">Her bruges standard event, som bruges når leverandør applikationen vises.</div>
+    <button class="button button-primary" @click="emitPageViewEvent">Page view event</button>
+    <h4>AppNaeste</h4>
+    <div class="my-5">Dette event bruges ved tryk på en næste-knap eller tilsvarende.</div>
+    <button class="button button-primary" @click="emitNaesteEvent">Næste trin event</button>
+    <h4>AppForrige</h4>
+    <div class="my-5">Dette event bruges ved tryk på en forrige-knap eller tilsvarende.</div>
+    <button class="button button-primary" @click="emitForrigeEvent">Forrige trin event</button>
+    <h4>AppDownload</h4>
+    <div class="my-5">Dette event bruges ved tryk på en download-knap eller tilsvarende.</div>
+    <button class="button button-primary" @click="emitDownloadEvent">Download event</button>
+    <h4>AppCTAClick</h4>
+    <div class="my-5">
+      Dette event bruges ved tryk på andre knapper end ovenstående - fx "åben accordion". Det anbefales som udgangspunkt, at man begrænser brugen af
+      denne event-type.
+    </div>
+    <button class="button button-primary" @click="emitCTAClickEvent">Call to action event</button>
+    <h4>AppFritekst</h4>
+    <div class="my-5">
+      Dette event kan bruges, hvis intet andet event slår til. Det anbefales dog stærkt, at man overvejer om et af ovenstående events kan bruges i
+      stedet for.
+    </div>
+    <button class="button button-primary" @click="emitFritekstEvent">Fritekst event</button>
   </div>
 </template>
 
@@ -121,6 +150,7 @@
 import axios from 'axios';
 import ExternalComponent from './ExternalComponent.vue';
 import SvgIcons from './SvgIcons.vue';
+import * as DataEventUtil from '../utils/data-event-util';
 import * as DKFDS from 'dkfds';
 
 export interface Variant {
@@ -157,10 +187,10 @@ export default {
   },
 
   computed: {
-    variantColor: function () {
+    variantColor: function() {
       return this.variant?.parametre[0].parametervaerdi ?? '#C0C0C0';
     },
-    variantName: function () {
+    variantName: function() {
       return this.variant?.navn ?? 'default';
     }
   },
@@ -200,6 +230,29 @@ export default {
     updateStepFromHash() {
       const { hash } = window.location;
       this.step = hash ? parseInt(hash.replaceAll('#', ''), 10) : 1;
+    },
+    // Data collection methods
+    emitPageViewEvent() {
+      DataEventUtil.emitPageViewEvent(this);
+    },
+    emitNaesteEvent() {
+      DataEventUtil.emitNaesteEvent(this, window.location.href, this.step);
+    },
+    emitForrigeEvent() {
+      DataEventUtil.emitForrigeEvent(this, window.location.href, this.step);
+    },
+    emitDownloadEvent() {
+      DataEventUtil.emitDownloadEvent(this, 'doc.pfd', 'download data');
+    },
+    emitCTAClickEvent() {
+      DataEventUtil.emitCTAClickEvent(this, 'eventType', 'CTA data');
+    },
+    emitFritekstEvent() {
+      const data = {
+        step: this.step,
+        maxStep: this.maxStep
+      };
+      DataEventUtil.emitFritekstEvent(this, 'eventType', JSON.stringify(data));
     }
   }
 };
