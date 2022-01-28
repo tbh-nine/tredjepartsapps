@@ -150,8 +150,8 @@
 import axios from 'axios';
 import ExternalComponent from './ExternalComponent.vue';
 import SvgIcons from './SvgIcons.vue';
-import * as DataEventUtil from '../utils/data-event-util';
 import * as DKFDS from 'dkfds';
+import * as DataEvent from '@erst-vg/piwik-event-wrapper';
 
 export interface Variant {
   navn: string;
@@ -187,10 +187,10 @@ export default {
   },
 
   computed: {
-    variantColor: function() {
+    variantColor: function () {
       return this.variant?.parametre[0].parametervaerdi ?? '#C0C0C0';
     },
-    variantName: function() {
+    variantName: function () {
       return this.variant?.navn ?? 'default';
     }
   },
@@ -233,26 +233,26 @@ export default {
     },
     // Data collection methods
     emitPageViewEvent() {
-      DataEventUtil.emitPageViewEvent(this);
+      DataEvent.emitPageViewEvent(this);
     },
     emitNaesteEvent() {
-      DataEventUtil.emitNaesteEvent(this, window.location.href, this.step);
+      DataEvent.emitNaesteEvent(this, window.location.href, this.step);
     },
     emitForrigeEvent() {
-      DataEventUtil.emitForrigeEvent(this, window.location.href, this.step);
+      DataEvent.emitForrigeEvent(this, window.location.href, this.step);
     },
     emitDownloadEvent() {
-      DataEventUtil.emitDownloadEvent(this, 'doc.pfd', 'download data');
+      DataEvent.emitDownloadEvent(this, 'doc.pfd', 'download data');
     },
     emitCTAClickEvent() {
-      DataEventUtil.emitCTAClickEvent(this, 'eventType', 'CTA data');
+      DataEvent.emitCTAClickEvent(this, 'eventType', 'CTA data');
     },
     emitFritekstEvent() {
       const data = {
         step: this.step,
         maxStep: this.maxStep
       };
-      DataEventUtil.emitFritekstEvent(this, 'eventType', JSON.stringify(data));
+      DataEvent.emitFritekstEvent(this, 'eventType', JSON.stringify(data));
     }
   }
 };
