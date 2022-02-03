@@ -27,7 +27,8 @@
       </div>
     </div>
     <div>
-      <button v-for="index in maxStep" :key="index" class="button button-primary" @click="changeStep(index)">Trin #{{ index }}</button>
+      <button class="button button-primary" @click="decreaseStep()">Forrige</button>
+      <button class="button button-primary" @click="increaseStep()">Næste</button>
     </div>
     <h3>Parameter variant:</h3>
     <div>
@@ -119,15 +120,6 @@
     Virksomhedsguiden opsamler data vedr. brugerens adfærd. Det er leverandørens ansvar at der også opsamles relevant data i leverandør applikationen.
     Følgende er en liste af events, som leverandør applikationen skal kalde i forskellige scenarier.
 
-    <h4>PageView</h4>
-    <div class="my-5">Her bruges standard event, som bruges når leverandør applikationen vises.</div>
-    <button class="button button-primary" @click="emitPageViewEvent">Page view event</button>
-    <h4>AppNaeste</h4>
-    <div class="my-5">Dette event bruges ved tryk på en næste-knap eller tilsvarende.</div>
-    <button class="button button-primary" @click="emitNaesteEvent">Næste trin event</button>
-    <h4>AppForrige</h4>
-    <div class="my-5">Dette event bruges ved tryk på en forrige-knap eller tilsvarende.</div>
-    <button class="button button-primary" @click="emitForrigeEvent">Forrige trin event</button>
     <h4>AppDownload</h4>
     <div class="my-5">Dette event bruges ved tryk på en download-knap eller tilsvarende.</div>
     <button class="button button-primary" @click="emitDownloadEvent">Download event</button>
@@ -199,6 +191,7 @@ export default {
     new DKFDS.Accordion(document.getElementById('accordion-element'));
   },
   created() {
+    window.location.hash = '1';
     window.addEventListener('hashchange', this.updateStepFromHash);
   },
   destroyed() {
@@ -224,23 +217,33 @@ export default {
           this.pending = false;
         });
     },
-    changeStep(step: number) {
-      window.location.hash = String(step);
+    decreaseStep() {
+      if (window.location.hash !== '#1') {
+        const { hash, pathname } = window.location;
+        const previousHash = String(parseInt(this.removeHash(hash), 10) - 1);
+        const previousUrl = pathname + '#' + previousHash;
+        DataEvent.emitForrigeEvent(this, previousUrl);
+        window.location.hash = previousHash;
+      }
+    },
+    increaseStep() {
+      if (window.location.hash !== '#' + this.maxStep) {
+        const { hash, pathname } = window.location;
+        const previousHash = String(parseInt(this.removeHash(hash), 10) + 1);
+        const nextUrl = pathname + '#' + previousHash;
+        DataEvent.emitNaesteEvent(this, nextUrl);
+        window.location.hash = previousHash;
+      }
     },
     updateStepFromHash() {
       const { hash } = window.location;
-      this.step = hash ? parseInt(hash.replaceAll('#', ''), 10) : 1;
-    },
-    // Data collection methods
-    emitPageViewEvent() {
+      this.step = hash ? parseInt(this.removeHash(hash), 10) : 1;
       DataEvent.emitPageViewEvent(this);
     },
-    emitNaesteEvent() {
-      DataEvent.emitNaesteEvent(this, window.location.href, this.step);
+    removeHash(hash: string) {
+      return hash.replaceAll('#', '');
     },
-    emitForrigeEvent() {
-      DataEvent.emitForrigeEvent(this, window.location.href, this.step);
-    },
+    // Data collection methods
     emitDownloadEvent() {
       DataEvent.emitDownloadEvent(this, 'doc.pfd', 'download data');
     },
