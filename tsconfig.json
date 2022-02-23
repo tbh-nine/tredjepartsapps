@@ -1,3 +1,4 @@
+// INFO: Changes to this file will not be included in final build
 {
   "compilerOptions": {
     "target": "esnext",
@@ -15,9 +16,6 @@
     "baseUrl": ".",
     "skipLibCheck": true, // TODO: skal være false - venter på ny update fra toasted
     "types": ["webpack-env"],
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [

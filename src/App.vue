@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts">
+// INFO: Changes to this file will not be included in final build
 import Applikation from './components/Applikation.vue';
 import * as DKFDS from 'dkfds';
 
@@ -36,6 +37,6 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 @import 'styles/_app.scss';
 </style>
